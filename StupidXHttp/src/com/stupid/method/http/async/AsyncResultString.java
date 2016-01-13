@@ -41,7 +41,7 @@ public class AsyncResultString extends TextHttpResponseHandler implements
 	public void onFailure(int statusCode, Header[] headers, String data,
 			Throwable throwable) {
 		if (resultListener != null)
-			resultListener.onServerResult(getResultCode(), data, true,
+			resultListener.onServerResult(getResultCode(), data, false,
 					statusCode);
 		else {
 			XLog.e(tag, "resultListener is null");
@@ -60,7 +60,7 @@ public class AsyncResultString extends TextHttpResponseHandler implements
 	 */
 	public void onSuccess(int statusCode, Header[] headers, String data) {
 		if (resultListener != null)
-			resultListener.onServerResult(getResultCode(), data, false,
+			resultListener.onServerResult(getResultCode(), data, true,
 					statusCode);
 		else {
 			XLog.e(tag, "resultListener is null");

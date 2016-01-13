@@ -51,7 +51,7 @@ public class AQResultString extends AjaxCallback<String> implements
 				resultListener.onServerResult(resultCode, data, true,
 						status.getCode());
 			} else {
-				resultListener.onServerResult(resultCode, data, true,
+				resultListener.onServerResult(resultCode, data, false,
 						status.getCode());
 
 			}
