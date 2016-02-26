@@ -7,14 +7,15 @@ import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 
+import com.stupid.method.http.impl.XHttp;
 import com.stupid.method.http.util.MapUtil;
 
 abstract public class AbsIXHttp implements IXHttp {
 
 	private String charset = CHARSET_DEFAULT;
 	private String contentType = CONTENT_TYPE_DEFAULT;
-	private Map<String, String> defineHead = MapUtil.asMap("class-name",
-			"AbsIXHttp").add("tools", "IXHTTP");
+	private static final Map<String, String> defineHead = MapUtil.asMap(
+			"class-name", "AbsIXHttp").add("tools", "IXHTTP");
 
 	{
 		defineHead.put("class-name", this.getClass().getSimpleName());
@@ -129,6 +130,10 @@ abstract public class AbsIXHttp implements IXHttp {
 	final public IXHttp setContentType(String contentType) {
 		this.contentType = contentType;
 		return this;
+	}
+
+	public XHttp getXhttp() {
+		return new XHttp(this);
 	}
 
 }

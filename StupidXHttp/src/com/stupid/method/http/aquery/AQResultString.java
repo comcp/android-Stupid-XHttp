@@ -51,8 +51,10 @@ public class AQResultString extends AjaxCallback<String> implements
 				resultListener.onServerResult(resultCode, data, true,
 						status.getCode());
 			} else {
-				resultListener.onServerResult(resultCode, data, false,
-						status.getCode());
+				resultListener.onServerResult(resultCode, status.getMessage(),
+						false,
+						status.getCode() == -101 ? RESULT_NO_LINK_NETWORK
+								: status.getCode());
 
 			}
 		else {

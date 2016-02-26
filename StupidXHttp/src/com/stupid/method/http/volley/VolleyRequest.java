@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,32 +26,33 @@ import com.stupid.method.http.util.URLUtil;
 abstract class VolleyRequest<T> extends Request<T> {
 	public static final String POST_ENTITY = "%entity";
 
-	private static String multipart = "multipart/form-data";
-	private static String urlencoded = "application/x-www-form-urlencoded";
+	// private static String multipart = "multipart/form-data";
+	// private static String urlencoded = "application/x-www-form-urlencoded";
 
 	private String charset = "utf-8";
 
 	/** Content type for request. */
 	private String contentType = "application/json";
-
+	VolleyResult resultListener;
 	protected Map<String, Object> params = new HashMap<String, Object>();
 	protected Map<String, String> headers;
 	{
 		setShouldCache(false);
 	}
 
-	public VolleyRequest(int method, String url, VolleyResult<T> result) {
+	public VolleyRequest(int method, String url, VolleyResult result) {
 		super(method, url, result);
+		this.resultListener = result;
 		setTimeout(10000);
 	}
 
-	public VolleyRequest(String url, HttpEntity entity, VolleyResult<T> result) {
+	public VolleyRequest(String url, HttpEntity entity, VolleyResult result) {
 		this(Method.POST, url, result);
 		params.put(POST_ENTITY, entity);
 	}
 
 	public VolleyRequest(int method, String url, Map<String, ?> params,
-			VolleyResult<T> result) {
+			VolleyResult result) {
 		this(method, url, result);
 		this.params.putAll(params);
 	}
@@ -190,7 +190,6 @@ abstract class VolleyRequest<T> extends Request<T> {
 					|| value instanceof InputStream)
 				return true;
 		}
-
 		return false;
 	}
 }

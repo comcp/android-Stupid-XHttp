@@ -25,7 +25,6 @@ import org.apache.http.entity.StringEntity;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 /**
@@ -37,49 +36,51 @@ import com.android.volley.toolbox.HttpHeaderParser;
  */
 public class VolleyRequestString extends VolleyRequest<String> {
 
-	private final Listener<String> mListener;
-
 	public VolleyRequestString(int method, String url, String requestBody,
-			VolleyResult<String> result) throws UnsupportedEncodingException {
+			VolleyResult result) throws UnsupportedEncodingException {
 		this(url, new StringEntity(requestBody), result);
 	}
 
 	public VolleyRequestString(String url, HttpEntity entity,
-			VolleyResult<String> result) {
+			VolleyResult result) {
 		super(url, entity, result);
-		mListener = result;
 
 	}
 
 	public VolleyRequestString(int method, String url, Map<String, ?> map,
-			VolleyResult<String> result) {
+			VolleyResult result) {
 		super(method, url, map, result);
-		mListener = result;
 	}
 
 	/** Method:GET */
-	public VolleyRequestString(String url, VolleyResult<String> result) {
+	public VolleyRequestString(String url, VolleyResult result) {
 		super(Method.GET, url, result);
-		mListener = result;
 
 	}
 
 	@Override
 	protected void deliverResponse(String response) {
-		if (mListener != null)
-			mListener.onResponse(response);
+
 	}
 
 	@Override
 	protected Response<String> parseNetworkResponse(NetworkResponse response) {
+
 		try {
 			String jsonString = new String(response.data,
-					HttpHeaderParser.parseCharset(response.headers));
+					HttpHeaderParser.parseCharset(response.headers,
+							getCharset()));
+
+			if (resultListener != null) {
+				resultListener.onServerResponse(jsonString,
+						response.statusCode, response.headers);
+			}
+
 			return Response.success(jsonString,
 					HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
+
 			return Response.error(new ParseError(e));
 		}
 	}
-
 }

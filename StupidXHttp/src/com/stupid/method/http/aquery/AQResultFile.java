@@ -30,8 +30,10 @@ public class AQResultFile extends AjaxCallback<File> implements IXHttpResult,
 				resultListener.onServerResult(resultCode,
 						data.getAbsolutePath(), true, status.getCode());
 			} else {
-				resultListener.onServerResult(resultCode, null, true,
-						status.getCode());
+				resultListener.onServerResult(resultCode, status.getMessage(),
+						false,
+						status.getCode() == -101 ? RESULT_NO_LINK_NETWORK
+								: status.getCode());
 
 			}
 		else {

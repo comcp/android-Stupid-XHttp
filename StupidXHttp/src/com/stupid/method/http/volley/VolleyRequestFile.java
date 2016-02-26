@@ -35,7 +35,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
  */
 public class VolleyRequestFile extends VolleyRequest<File> {
 
-	private Listener<File> mListener;
+	private VolleyResult mListener;
 	private File target;
 	/**
 	 * Decoding lock so that we don't decode more than one image at a time (to
@@ -44,7 +44,7 @@ public class VolleyRequestFile extends VolleyRequest<File> {
 	private static final Object sDecodeLock = new Object();
 
 	public VolleyRequestFile(int method, String url, File target,
-			VolleyResult<File> listener) {
+			VolleyResult listener) {
 		super(method, url, listener);
 		mListener = listener;
 		this.target = target;
@@ -53,7 +53,6 @@ public class VolleyRequestFile extends VolleyRequest<File> {
 
 	@Override
 	protected void deliverResponse(File response) {
-		mListener.onResponse(response);
 	}
 
 	@Override
@@ -79,13 +78,14 @@ public class VolleyRequestFile extends VolleyRequest<File> {
 			os.write(data);
 			os.flush();
 			os.close();
-
+			mListener.onServerResponse(target.getAbsolutePath(),
+					response.statusCode, response.headers);
+			return Response.success(target,
+					HttpHeaderParser.parseCacheHeaders(response));
 		} catch (IOException e) {
 			return Response.error(new ParseError(e));
 		}
 
-		return Response.success(target,
-				HttpHeaderParser.parseCacheHeaders(response));
 	}
 
 }

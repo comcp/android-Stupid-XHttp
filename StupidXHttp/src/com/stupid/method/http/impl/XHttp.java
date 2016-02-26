@@ -8,7 +8,7 @@ import org.apache.http.HttpEntity;
 import com.stupid.method.http.IXHttp;
 import com.stupid.method.http.IXServerResultListener;
 
-/** 插件化 HTTP 请求 */
+/**  好像没什么卵用 */
 public class XHttp implements IXHttp {
 	IXHttp http;
 
