@@ -12,6 +12,7 @@ import android.content.Context;
 import com.androidquery.AQuery;
 import com.stupid.method.http.AbsIXHttp;
 import com.stupid.method.http.IXHttp;
+import com.stupid.method.http.IXHttpProgress;
 import com.stupid.method.http.IXServerResultListener;
 import com.stupid.method.http.util.StringUtils;
 
@@ -86,4 +87,18 @@ public class AQueryHttp extends AbsIXHttp {
 		this.query = aQuery;
 	}
 
+	@Override
+	public IXHttp download(int resultCode, String url, File target,
+			IXServerResultListener resultListener, IXHttpProgress progress) {
+		throw new NullPointerException("没实现");
+	}
+
+	@Override
+	public IXHttp postMap(int resultCode, String contentType, String url,
+			Map<String, ?> params, Map<String, String> headers,
+			IXServerResultListener resultListener, IXHttpProgress progress) {
+
+		throw new NullPointerException("没实现");
+
+	}
 }

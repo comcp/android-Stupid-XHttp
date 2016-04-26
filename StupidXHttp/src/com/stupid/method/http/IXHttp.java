@@ -26,6 +26,9 @@ public interface IXHttp {
 	IXHttp download(int resultCode, String url, File target,
 			IXServerResultListener resultListener);
 
+	IXHttp download(int resultCode, String url, File target,
+			IXServerResultListener resultListener, IXHttpProgress progress);
+
 	IXHttp get(int resultCode, String url, IXServerResultListener resultListener);
 
 	IXHttp get(int resultCode, String url, Map<String, String> header,
@@ -53,8 +56,15 @@ public interface IXHttp {
 			Map<String, ?> params, Map<String, String> headers,
 			IXServerResultListener resultListener);
 
+	IXHttp postMap(int resultCode, String contentType, String url,
+			Map<String, ?> params, Map<String, String> headers,
+			IXServerResultListener resultListener, IXHttpProgress progress);
+
 	IXHttp postString(int resultCode, String url, String data,
 			IXServerResultListener resultListener);
+
+	IXHttp postString(int resultCode, String contentType, String url,
+			String data, IXServerResultListener resultListener);
 
 	IXHttp postString(int resultCode, String contentType, String url,
 			String data, Map<String, String> headers,
@@ -63,8 +73,5 @@ public interface IXHttp {
 	IXHttp setCharset(String charset);
 
 	IXHttp setContentType(String type);
-
-	IXHttp postString(int resultCode, String contentType, String url,
-			String data, IXServerResultListener resultListener);
 
 }

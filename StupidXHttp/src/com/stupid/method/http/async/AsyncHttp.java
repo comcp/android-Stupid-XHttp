@@ -13,6 +13,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.stupid.method.http.AbsIXHttp;
 import com.stupid.method.http.IXHttp;
+import com.stupid.method.http.IXHttpProgress;
 import com.stupid.method.http.IXServerResultListener;
 
 public class AsyncHttp extends AbsIXHttp {
@@ -73,6 +74,27 @@ public class AsyncHttp extends AbsIXHttp {
 			Map<String, ?> params, Map<String, String> headers,
 			IXServerResultListener resultListener) {
 
+		postMap(resultCode, contentType, url, params, headers, resultListener,
+				null);
+
+		return this;
+	}
+
+	@Override
+	public IXHttp download(int resultCode, String url, File target,
+			IXServerResultListener resultListener, IXHttpProgress progress) {
+
+		getQuery().get(
+				url,
+				new AsyncResultFile(target, resultCode, resultListener,
+						progress));
+		return this;
+	}
+
+	@Override
+	public IXHttp postMap(int resultCode, String contentType, String url,
+			Map<String, ?> params, Map<String, String> headers,
+			IXServerResultListener resultListener, IXHttpProgress progress) {
 		RequestParams requestParams = new RequestParams();
 		if (null != params)
 			for (Entry<String, ?> p : params.entrySet()) {
@@ -98,8 +120,8 @@ public class AsyncHttp extends AbsIXHttp {
 			}
 
 		getQuery().post(null, url, getHeaders(headers), requestParams,
-				contentType, new AsyncResultString(resultCode, resultListener));
-
+				contentType,
+				new AsyncResultString(resultCode, resultListener, progress));
 		return this;
 	}
 }

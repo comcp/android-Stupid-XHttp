@@ -6,9 +6,10 @@ import java.util.Map;
 import org.apache.http.HttpEntity;
 
 import com.stupid.method.http.IXHttp;
+import com.stupid.method.http.IXHttpProgress;
 import com.stupid.method.http.IXServerResultListener;
 
-/**  好像没什么卵用 */
+/** 好像没什么卵用 */
 public class XHttp implements IXHttp {
 	IXHttp http;
 
@@ -100,6 +101,19 @@ public class XHttp implements IXHttp {
 			String data, IXServerResultListener resultListener) {
 		return http.postString(resultCode, contentType, url, data,
 				resultListener);
+	}
+
+	@Override
+	public IXHttp download(int resultCode, String url, File target,
+			IXServerResultListener resultListener, IXHttpProgress progress) {
+		return http.download(resultCode, url, target, resultListener, progress);
+	}
+
+	@Override
+	public IXHttp postMap(int resultCode, String contentType, String url,
+			Map<String, ?> params, Map<String, String> headers,
+			IXServerResultListener resultListener, IXHttpProgress progress) {
+		return http.postMap(resultCode, contentType, url, params, headers, resultListener, progress);
 	}
 
 }

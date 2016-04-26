@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.stupid.method.http.AbsIXHttp;
 import com.stupid.method.http.IXHttp;
+import com.stupid.method.http.IXHttpProgress;
 import com.stupid.method.http.IXServerResultListener;
 
 public class VolleyHttp extends AbsIXHttp {
@@ -90,5 +91,20 @@ public class VolleyHttp extends AbsIXHttp {
 	private static VolleyResultString getListener(int resultCode,
 			IXServerResultListener resultListener) {
 		return new VolleyResultString(resultCode, resultListener);
+	}
+
+	@Override
+	public IXHttp download(int resultCode, String url, File target,
+			IXServerResultListener resultListener, IXHttpProgress progress) {
+		throw new NullPointerException("没实现");
+	}
+
+	@Override
+	public IXHttp postMap(int resultCode, String contentType, String url,
+			Map<String, ?> params, Map<String, String> headers,
+			IXServerResultListener resultListener, IXHttpProgress progress) {
+
+		throw new NullPointerException("没实现");
+
 	}
 }
