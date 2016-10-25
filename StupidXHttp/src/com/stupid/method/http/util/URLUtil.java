@@ -1,5 +1,7 @@
 package com.stupid.method.http.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Locale;
@@ -41,19 +43,22 @@ public class URLUtil {
 	public static String getUrlWithParas(String url,
 			Map<String, ? extends Object> parasMap) {
 
-		StringBuilder urlWithParas = new StringBuilder(
-				StringUtils.isEmpty(url) ? ""
-						: url.indexOf(URL_AND_PARA_SEPARATOR) == -1 ? url
-								+ URL_AND_PARA_SEPARATOR
-								: (url.endsWith(PARAMETERS_SEPARATOR) ? url
-										: url + PARAMETERS_SEPARATOR));
+		StringBuilder urlWithParas = new StringBuilder(isEmpty(url) ? ""
+				: url.indexOf(URL_AND_PARA_SEPARATOR) == -1 ? url
+						+ URL_AND_PARA_SEPARATOR
+						: (url.endsWith(PARAMETERS_SEPARATOR) ? url : url
+								+ PARAMETERS_SEPARATOR));
 
 		String paras = joinParas(parasMap);
-		if (!StringUtils.isEmpty(paras)) {
+		if (!isEmpty(paras)) {
 
 			urlWithParas.append(paras);
 		}
 		return urlWithParas.toString();
+	}
+
+	private static boolean isEmpty(CharSequence str) {
+		return (str == null || str.length() == 0);
 	}
 
 	/**
@@ -67,10 +72,9 @@ public class URLUtil {
 	 */
 	public static String getUrlWithValueEncodeParas(String url,
 			Map<String, String> parasMap) {
-		StringBuilder urlWithParas = new StringBuilder(
-				StringUtils.isEmpty(url) ? "" : url);
+		StringBuilder urlWithParas = new StringBuilder(isEmpty(url) ? "" : url);
 		String paras = joinParasWithEncodedValue(parasMap);
-		if (!StringUtils.isEmpty(paras)) {
+		if (!isEmpty(paras)) {
 			urlWithParas.append(URL_AND_PARA_SEPARATOR).append(paras);
 		}
 		return urlWithParas.toString();
@@ -120,7 +124,7 @@ public class URLUtil {
 					Map.Entry<String, String> entry = (Map.Entry<String, String>) ite
 							.next();
 					paras.append(entry.getKey()).append(EQUAL_SIGN)
-							.append(StringUtils.utf8Encode(entry.getValue()));
+							.append(utf8Encode(entry.getValue()));
 					if (ite.hasNext()) {
 						paras.append(PARAMETERS_SEPARATOR);
 					}
@@ -130,6 +134,18 @@ public class URLUtil {
 			}
 		}
 		return paras.toString();
+	}
+
+	private static String utf8Encode(String str) {
+		if (!isEmpty(str) && str.getBytes().length != str.length()) {
+			try {
+				return URLEncoder.encode(str, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(
+						"UnsupportedEncodingException occurred. ", e);
+			}
+		}
+		return str;
 	}
 
 	/**
@@ -142,7 +158,7 @@ public class URLUtil {
 	 */
 	public static String appendParaToUrl(String url, String paraKey,
 			String paraValue) {
-		if (StringUtils.isEmpty(url)) {
+		if (isEmpty(url)) {
 			return url;
 		}
 

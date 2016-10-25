@@ -1,139 +1,86 @@
 package com.stupid.method.http;
 
-import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
-import org.apache.http.Header;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
+/**
+ * @author wangx
+ * @version 2.0
+ *
+ * @param <kernel>
+ *            实现网络请求的核心类
+ */
+abstract public class AbsIXHttp<kernel> implements IXHttp {
+	final public static String getVersion() {
+		return "2.0";
+	}
 
-import com.stupid.method.http.impl.XHttp;
-import com.stupid.method.http.util.MapUtil;
+	/**
+	 * 设置默认时间
+	 * 
+	 * 
+	 * @param timeout
+	 *            超时时间 毫秒
+	 * @return
+	 */
 
-abstract public class AbsIXHttp implements IXHttp {
+	@Override
+	public void setDefHeader(String name, String value) {
+		defHeads.put(name, value);
+	}
 
-	private String charset = CHARSET_DEFAULT;
-	private String contentType = CONTENT_TYPE_DEFAULT;
-	private static final Map<String, String> defineHead = MapUtil.asMap(
-			"class-name", "AbsIXHttp").add("tools", "IXHTTP");
+	/**
+	 * 获得核心实现类
+	 * */
+	abstract public kernel getHttpKernel();
 
+	private static final Map<String, String> defHeads = new HashMap<String, String>(
+			3);
+
+	static {
+		defHeads.put("xHttp-version", getVersion());
+	}
 	{
-		defineHead.put("class-name", this.getClass().getSimpleName());
+		defHeads.put("xHttp-impl", this.getClass().getSimpleName());
+		if (getHttpKernel() != null)
+			defHeads.put("xHttp-kernel", getHttpKernel().getClass()
+					.getSimpleName());
+	}
+
+	protected Map<String, String> defHeads() {
+		return defHeads;
+	}
+
+	@Override
+	final public void post(int requestCode, String url,
+			Map<String, ?> requestParams, IXResultListener resultListener) {
+		post(requestCode, url, null, requestParams, resultListener);
+	}
+
+	@Override
+	final public void post(int requestCode, String url, String entity,
+			String contentType, IXResultListener resultListener) {
+		post(requestCode, url, null, entity, contentType, resultListener);
+	}
+
+	@Override
+	final public void get(int requestCode, String url,
+			Map<String, String> heads, IXResultListener resultListener) {
+		get(requestCode, url, heads, null, resultListener);
 
 	}
 
 	@Override
-	final public Map<String, String> defineHead() {
-
-		return defineHead;
+	final public void post(int requestCode, String url,
+			IXResultListener resultListener) {
+		post(requestCode, url, null, "", resultListener);
 	}
 
 	@Override
-	final public IXHttp get(int resultCode, String url,
-			IXServerResultListener resultListener) {
-
-		return get(resultCode, url, null, resultListener);
-	}
-
-	@Override
-	final public IXHttp get(int resultCode, String url,
-			Map<String, String> header, IXServerResultListener resultListener) {
-
-		return get(resultCode, url, null, header, resultListener);
-	}
-
-	final public String getCharset() {
-		return charset;
-	}
-
-	final public String getContentType() {
-		return contentType;
-	}
-
-	protected Map<String, String> getHeaderMap(Map<String, String> headers) {
-		if (headers == null)
-			return defineHead();
-		else {
-			headers.putAll(defineHead());
-			return headers;
-		}
-
-	}
-
-	protected Header[] getHeaders(Map<String, String> headers) {
-
-		Header[] heads = null;
-		if (headers == null)
-			headers = defineHead();
-		else
-			headers.putAll(defineHead());
-		heads = new Header[headers.size()];
-		int i = 0;
-		for (Map.Entry<String, String> head : headers.entrySet()) {
-			heads[i++] = new BasicHeader(head.getKey(), head.getValue());
-		}
-		return heads;
-
-	}
-
-	@Override
-	public IXHttp postMap(int resultCode, String url, Map<String, ?> params,
-			IXServerResultListener resultListener) {
-
-		postMap(resultCode, getContentType(), url, params, null, resultListener);
-		return this;
-	}
-
-	@Override
-	public IXHttp postMap(int resultCode, String contentType, String url,
-			Map<String, ?> params, Map<String, String> headers,
-			IXServerResultListener resultListener) {
-
-		return post(resultCode, contentType, url, params, headers,
-				resultListener);
-
-	}
-
-	@Override
-	public IXHttp postString(int resultCode, String url, String data,
-			IXServerResultListener resultListener) {
-
-		return postString(resultCode, getContentType(), url, data,
-				resultListener);
-	}
-
-	@Override
-	public IXHttp postString(int resultCode, String contentType, String url,
-			String data, IXServerResultListener resultListener) {
-		return postString(resultCode, contentType, url, data, null,
-				resultListener);
-	}
-
-	@Override
-	public IXHttp postString(int resultCode, String contentType, String url,
-			String data, Map<String, String> headers,
-			IXServerResultListener resultListener) {
-		try {
-			post(resultCode, contentType, url, new StringEntity(data,
-					getCharset()), headers, resultListener);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return this;
-	}
-
-	final public IXHttp setCharset(String charset) {
-		this.charset = charset;
-		return this;
-	}
-
-	final public IXHttp setContentType(String contentType) {
-		this.contentType = contentType;
-		return this;
-	}
-
-	public XHttp getXhttp() {
-		return new XHttp(this);
+	final public void get(int requestCode, String url,
+			IXResultListener resultListener) {
+		get(requestCode, url, null, resultListener);
 	}
 
 }
